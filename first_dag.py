@@ -23,15 +23,15 @@ def third_task_function():
     return
 
 with DAG(
-    dag_id="My First CS 280 DAG",
-    schedule="0 10 * * *",
+    dag_id="My-First-CS-280-DAG",
+    schedule_interval="0 10 * * *",
     start_date=pendulum.datetime(2023, 9, 1, tz="US/Pacific"),
     catchup=False,
 ) as dag:
-start_task = DummyOperator(task_id="start_task")
-first_task = PythonOperator(task_id="first_task", python_callable=first_task_function)
-second_task = PythonOperator(task_id="second_task", python_callable=second_task_function)
-third_task = PythonOperator(task_id="third_task", python_callable=third_task_function)
-end_task = DummyOperator(task_id="end_task")
+	start_task = DummyOperator(task_id="start_task")
+	first_task = PythonOperator(task_id="first_task", python_callable=first_task_function)
+	second_task = PythonOperator(task_id="second_task", python_callable=second_task_function)
+	third_task = PythonOperator(task_id="third_task", python_callable=third_task_function)
+	end_task = DummyOperator(task_id="end_task")
 
 start_task >> first_task >> second_task >> third_task >> end_task
