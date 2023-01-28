@@ -124,10 +124,10 @@ def load_twitter_api_data(ti: TaskInstance, **kwargs):
 		retweet_count = row["retweet_count"]
 		tweet_id = row["tweet_id"]
 
-		dbox.push((tweet_id + "_reply_count"),reply_count)
-		dbox.push((tweet_id + "_like_count"),like_count)
-		dbox.push((tweet_id + "_favorite_count"),favorite_count)
-		dbox.push((tweet_id + "_retweet_count"),retweet_count)
+		dbox.push((str(tweet_id) + "_reply_count"),reply_count)
+		dbox.push((str(tweet_id) + "_like_count"),like_count)
+		dbox.push((str(tweet_id)+ "_favorite_count"),favorite_count)
+		dbox.push((str(tweet_id) + "_retweet_count"),retweet_count)
 
 	for index, row in user_data.iterrows():
 		followers_count = row["followers_count"]
@@ -136,10 +136,10 @@ def load_twitter_api_data(ti: TaskInstance, **kwargs):
 		listed_count  = row["listed_count"]
 		name = row["name"]
 
-		dbox.push((name + "_followers_count"),followers_count)
-		dbox.push((tweet_id + "_following_count"),following_count)
-		dbox.push((tweet_id + "_tweet_count"),tweet_count)
-		dbox.push((tweet_id + "_listed_count"),listed_count)
+		dbox.push((str(name) + "_followers_count"),followers_count)
+		dbox.push((str(name) + "_following_count"),following_count)
+		dbox.push((str(name) + "_tweet_count"),tweet_count)
+		dbox.push((str(name) + "_listed_count"),listed_count)
 	
 
 	return
