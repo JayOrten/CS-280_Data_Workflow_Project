@@ -6,9 +6,6 @@ from airflow.operators.dummy import DummyOperator
 from airflow.models import Variable
 from airflow.models import TaskInstance
 
-my_value = Variable.get("my_key", deserialize_json=True)
-print(my_value)
-
 def get_auth_header(my_bearer_token):
 	return {"Authorization": f"Bearer {my_bearer_token}"}
 
