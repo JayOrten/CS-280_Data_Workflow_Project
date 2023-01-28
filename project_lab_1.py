@@ -14,7 +14,8 @@ def get_auth_header(my_bearer_token):
 
 def get_twitter_api_data_task_func(ti: TaskInstance, **kwargs):
 	# Pulls bearer token
-	bearer_token = Variable.get("Bearer Token", deserialize_json=True)
+	print("test")
+	bearer_token = Variable.get("Bearer Token")
 
 	# Create authentication header
 	auth_header = get_auth_header(bearer_token)
@@ -47,7 +48,7 @@ def get_twitter_api_data_task_func(ti: TaskInstance, **kwargs):
 	# Push data to next task in two seperate lists
 	ti.xcom_push("user_requests", user_requests)
 	ti.xcom_push("tweet_requests", tweet_requests)
-	
+
 
 def my_task_func_2(ti: TaskInstance, **kwargs):
 	my_list = ti.xcom_pull(key="i_love_ds", task_ids="my_dummy_task")
