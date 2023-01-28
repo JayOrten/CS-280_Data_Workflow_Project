@@ -7,6 +7,8 @@ from airflow.operators.dummy import DummyOperator
 from airflow.models import Variable
 from airflow.models import TaskInstance
 import pandas as pd
+import json
+from google.cloud import storage
 
 def get_auth_header(my_bearer_token):
 	return {"Authorization": f"Bearer {my_bearer_token}"}
@@ -55,11 +57,42 @@ def transform_twitter_api_data(ti: TaskInstance, **kwargs):
 	print(user_requests)
 	print(tweet_requests)
 
-	user_requests_df = pd.read_json(user_requests)
-	tweet_requests_df = pd.read_json(tweet_requests)
+	# Transform user data
+	user_requests_dta = []
+	for item in user_requests:
+		user_requests_dta.append([item])
+		
+	user_requests_df = pd.DataFrame(user_requests_dta, columns=['data'])
 
-	print(user_requests_df.to_string())
-	print(tweet_requests_df.to_string())
+	user_requests_df = pd.json_normalize(json.loads(user_requests_df.to_json(orient='records')))
+
+	# Drop columns
+	user_requests_df = user_requests_df.drop(user_requests_df.columns[[0,7]], axis=1)
+
+	# Rename
+	user_requests_df.columns = ['username','user_id','followers_count','following_count','tweet_count','listed_count','name']
+
+
+	# Transform tweet data
+	tweet_requests_dta = []
+	for item in tweet_requests:
+		tweet_requests_dta.append([item])
+		
+	tweet_requests_df = pd.DataFrame(tweet_requests_dta, columns=['data'])
+
+	tweet_requests_df = pd.json_normalize(json.loads(tweet_requests_df.to_json(orient='records')))
+
+	# Drop columns
+	tweet_requests_df = tweet_requests_df.drop(tweet_requests_df.columns[[0,7]], axis=1)
+
+	# Rename
+	tweet_requests_df.columns = ['retweet_count','reply_count','like_count','quote_count','impression_count','text','tweet_id',]
+
+
+	client = storage.Client()
+	bucket = client.get_bucket("j-o-apache-airflow-cs280")
+	bucket.blob("data/user_data.csv").upload_from_string(user_requests_df.to_csv(index=False), "text/csv")
+	bucket.blob("data/tweet_data.csv").upload_from_string(tweet_requests_df.to_csv(index=False), "text/csv")
 
 	return
 
