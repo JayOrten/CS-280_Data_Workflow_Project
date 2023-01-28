@@ -32,7 +32,7 @@ def get_twitter_api_data_task_func(ti: TaskInstance, **kwargs):
 		api_url = f"https://api.twitter.com/2/users/{id}"
 		request = requests.get(api_url, headers=auth_header, params=user_params)
 		user_requests.append(request)
-		logging.info(request)
+		log.info(request)
 
 	# Tweet Requests:
 
@@ -41,17 +41,16 @@ def get_twitter_api_data_task_func(ti: TaskInstance, **kwargs):
 		api_url = f"https://api.twitter.com/2/tweets/{id}"
 		request = requests.get(api_url, headers=auth_header, params=tweet_params)
 		tweet_requests.append(request)
-		logging.info(request)
+		log.info(request)
 
 	# Push data to next task in two seperate lists
 	ti.xcom_push("user_requests", user_requests)
 	ti.xcom_push("tweet_requests", tweet_requests)
 
 
-def my_task_func_2(ti: TaskInstance, **kwargs):
+def transform_twitter_api_data(ti: TaskInstance, **kwargs):
 	my_list = ti.xcom_pull(key="i_love_ds", task_ids="my_dummy_task")
-	logging.info(my_list)
-	# should log the list to this task's log.
+	log.info(my_list)
 	return
 
 with DAG(
@@ -66,12 +65,12 @@ with DAG(
 		python_callable = get_twitter_api_data_task_func,
 		provide_context=True
 		)
-	my_task_two = PythonOperator(
-		task_id="my_dummy_task_2",
-		python_callable=my_task_func_2,
+	transform_twitter_api_data_task = PythonOperator(
+		task_id="transform_twitter_api_data",
+		python_callable=transform_twitter_api_data,
 		provide_context=True
 		)
 	end_task = DummyOperator(task_id="end_task")
 
 
-start_task >> get_twitter_api_data_task >> my_task_two >> end_task
+start_task >> get_twitter_api_data_task >> transform_twitter_api_data_task >> end_task
