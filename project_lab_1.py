@@ -6,6 +6,7 @@ from airflow.operators.python import PythonOperator
 from airflow.operators.dummy import DummyOperator
 from airflow.models import Variable
 from airflow.models import TaskInstance
+import pandas as pd
 
 def get_auth_header(my_bearer_token):
 	return {"Authorization": f"Bearer {my_bearer_token}"}
@@ -49,8 +50,17 @@ def get_twitter_api_data_task_func(ti: TaskInstance, **kwargs):
 
 
 def transform_twitter_api_data(ti: TaskInstance, **kwargs):
-	my_list = ti.xcom_pull(key="i_love_ds", task_ids="my_dummy_task")
-	log.info(my_list)
+	user_requests = ti.xcom_pull(key="user_requests", task_ids="get_twitter_api_data_task")
+	tweet_requests = ti.xcom_pull(key="tweet_requests", task_ids="get_twitter_api_data_task")
+	print(user_requests)
+	print(tweet_requests)
+
+	user_requests_df = pd.read_json(user_requests)
+	tweet_requests_df = pd.read_json(tweet_requests)
+
+	print(user_requests_df.to_string())
+	print(tweet_requests_df.to_string())
+
 	return
 
 with DAG(
