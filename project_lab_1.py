@@ -30,16 +30,16 @@ def get_twitter_api_data_task_func(ti: TaskInstance, **kwargs):
 	user_params = {'user.fields':'public_metrics,profile_image_url,username,description,id'}
 	for id in user_ids:
 		api_url = f"https://api.twitter.com/2/users/{id}"
-		request = requests.get(api_url, headers=auth_header, params=user_params)
+		request = requests.get(api_url, headers=auth_header, params=user_params).json()
 		user_requests.append(request)
 		log.info(request)
 
 	# Tweet Requests:
 
-	tweet_params = {'tweet.fields':'public_metrics,author_id,test'}
+	tweet_params = {'tweet.fields':'public_metrics,author_id,text'}
 	for id in tweet_ids:
 		api_url = f"https://api.twitter.com/2/tweets/{id}"
-		request = requests.get(api_url, headers=auth_header, params=tweet_params)
+		request = requests.get(api_url, headers=auth_header, params=tweet_params).json()
 		tweet_requests.append(request)
 		log.info(request)
 
