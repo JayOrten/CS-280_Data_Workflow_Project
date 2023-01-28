@@ -9,6 +9,8 @@ from airflow.models import TaskInstance
 import pandas as pd
 import json
 from google.cloud import storage
+from gcsfs import GCSFileSystem
+import os
 
 def get_auth_header(my_bearer_token):
 	return {"Authorization": f"Bearer {my_bearer_token}"}
@@ -88,6 +90,7 @@ def transform_twitter_api_data(ti: TaskInstance, **kwargs):
 	# Rename
 	tweet_requests_df.columns = ['retweet_count','reply_count','like_count','quote_count','impression_count','text','tweet_id',]
 
+	os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/home/jay_orten/airflow-cs280/auth/bucket_auth.json"
 
 	client = storage.Client()
 	bucket = client.get_bucket("j-o-apache-airflow-cs280")
