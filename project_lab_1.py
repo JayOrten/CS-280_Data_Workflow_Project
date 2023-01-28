@@ -106,9 +106,6 @@ def load_twitter_api_data(ti: TaskInstance, **kwargs):
 
 	os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/home/jay_orten/airflow-cs280/auth/bucket_auth.json"
 
-	tweet_data
-	user_data
-
 	fs = GCSFileSystem(project="Jay-Orten-CS-280")
 	with fs.open('gs://j-o-apache-airflow-cs280/data/tweet_data.csv', 'rb') as f:
 		tweet_data = pd.read_csv(f)
