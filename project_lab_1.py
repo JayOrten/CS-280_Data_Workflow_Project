@@ -1,6 +1,7 @@
 from airflow import DAG
 import logging as log
 import pendulum
+import requests
 from airflow.operators.python import PythonOperator
 from airflow.operators.dummy import DummyOperator
 from airflow.models import Variable
