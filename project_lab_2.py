@@ -12,6 +12,7 @@ from google.cloud import storage
 from gcsfs import GCSFileSystem
 import os
 
+
 from models.config import Session #You would import this from your config file
 from models.users_model import User
 from models.tweet_model import Tweet
