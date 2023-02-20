@@ -9,7 +9,7 @@ class Tweet_Timeseries(Base):
     tweet_id = Column(Integer, not_null=True)
     retweet_count = Column(Integer, not_null=True)
     favorite_count = Column(Integer, not_null=True)
-    created_at = Column(Date, not_null=True)
+    date = Column(Date, not_null=True)
     
    def __repr__(self) -> str:
         return f"Tweet_Timeseries(id={self.id}, 
