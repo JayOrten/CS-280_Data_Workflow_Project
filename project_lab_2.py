@@ -34,14 +34,23 @@ def load_data_task_func(ti : TaskInstance, **kwargs):
     # get all tweets
     all_tweets = session.query(Tweet).all()
 
-    ti.xcom_push("user_ids", all_users)
-    ti.xcom_push("tweet_ids", all_tweets)
+    user_ids = []
+    tweet_ids = []
+
+    for user in all_users:
+        user_ids.append(user.user_id)
+
+    for tweet in all_tweets:
+        tweet_ids.append(tweet.tweet_id)
+
+    ti.xcom_push("user_ids", user_ids)
+    ti.xcom_push("tweet_ids", tweet_ids)
 
     session.close()
 
 def call_api_task_func(ti : TaskInstance, **kwargs):
-    all_users = ti.xcom_pull(key="user_ids", task_ids="load_data_task")
-    all_tweets = ti.xcom_pull(key="tweet_ids", task_ids="load_data_task")
+    user_ids = ti.xcom_pull(key="user_ids", task_ids="load_data_task")
+    tweet_ids = ti.xcom_pull(key="tweet_ids", task_ids="load_data_task")
 
     # Pulls bearer token
     bearer_token = Variable.get("Bearer Token")
@@ -55,8 +64,7 @@ def call_api_task_func(ti : TaskInstance, **kwargs):
 
     # Get updated stats for each user
     user_params = {'user.fields':'public_metrics,profile_image_url,username,description,id'}
-    for user in all_users:
-        id = user.twitter_user_id
+    for id in user_ids:
         api_url = f"https://api.twitter.com/2/users/{id}"
         request = requests.get(api_url, headers=auth_header, params=user_params).json()
         user_stats.append(request)
@@ -72,8 +80,7 @@ def call_api_task_func(ti : TaskInstance, **kwargs):
 
     # Retrieve every tweets updated stats
     tweet_params = {'tweet.fields':'public_metrics,author_id,text'}
-    for tweet in all_tweets:
-        id = tweet.tweet_id
+    for id in tweet_ids:
         api_url = f"https://api.twitter.com/2/tweets/{id}"
         request = requests.get(api_url, headers=auth_header, params=tweet_params).json()
         tweet_stats.append(request)
