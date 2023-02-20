@@ -150,7 +150,7 @@ def transform_data_task_func(ti : TaskInstance, **kwargs):
     new_tweets_df.drop(['edit_history_tweet_ids'], axis=1)
 
     # Rename
-    new_tweets_df = new_tweets_df[['id','text','public_metrics.retweet_count','public_metrics.reply_count','public_metrics.like_count','public_metrics.quote_count','public_metrics.impression_count,','author_id']]
+    new_tweets_df = new_tweets_df[['id','text','public_metrics.retweet_count','public_metrics.reply_count','public_metrics.like_count','public_metrics.quote_count','public_metrics.impression_count','author_id']]
     new_tweets_df.columns = ['tweet_id','text','retweet_count','reply_count','like_count','quote_count','impression_count', 'author_id']
 
     # Combine
