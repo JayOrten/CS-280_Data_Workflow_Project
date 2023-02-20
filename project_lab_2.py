@@ -117,32 +117,49 @@ def transform_data_task_func(ti : TaskInstance, **kwargs):
     user_requests_df.columns = ['user_id','username','name','followers_count','following_count','tweet_count','listed_count']
 
 
-    # Transform tweet data
+    # Transform tweet stats data
     tweet_stats_dta = []
     for item in tweet_stats:
         tweet_stats_dta.append([item])
 
-    for item in new_tweets:
-        tweet_stats_dta.append([item])
-        
-    tweet_requests_df = pd.DataFrame(tweet_stats_dta, columns=['data'])
+    tweet_stats_df = pd.DataFrame(tweet_stats_dta, columns=['data'])
 
-    tweet_requests_df = pd.json_normalize(json.loads(tweet_requests_df.to_json(orient='records')))
+    tweet_stats_df = pd.json_normalize(json.loads(tweet_stats_df.to_json(orient='records')))
 
     # Drop columns
-    tweet_requests_df.drop(['data.data.edit_history_tweet_ids'], axis=1)
+    tweet_stats_df.drop(['data.data.edit_history_tweet_ids'], axis=1)
 
     # Rename
-    tweet_requests_df = tweet_requests_df[['data.data.id','data.data.text','data.data.public_metrics.retweet_count','data.data.public_metrics.reply_count','data.data.public_metrics.like_count','data.data.public_metrics.quote_count','data.data.public_metrics.impression_count,','data.data.author_id']]
-    tweet_requests_df.columns = ['tweet_id','text','retweet_count','reply_count','like_count','quote_count','impression_count', 'user_id']
+    tweet_stats_df = tweet_stats_df[['data.data.id','data.data.text','data.data.public_metrics.retweet_count','data.data.public_metrics.reply_count','data.data.public_metrics.like_count','data.data.public_metrics.quote_count','data.data.public_metrics.impression_count,','data.data.author_id']]
+    tweet_stats_df.columns = ['tweet_id','text','retweet_count','reply_count','like_count','quote_count','impression_count', 'author_id']
 
+    
+    # Transform new tweets data
+    new_tweets_dta = []
+    for item in new_tweets:
+        new_tweets_dta.append(item['data'])
 
+    flattened = sum(new_tweets_dta, [])
+
+    new_tweets_df = pd.DataFrame(flattened)
+
+    new_tweets_df = pd.json_normalize(json.loads(new_tweets_df.to_json(orient='records')))
+
+    # Drop columns
+    new_tweets_df.drop(['edit_history_tweet_ids'], axis=1)
+
+    # Rename
+    new_tweets_df = new_tweets_df[['id','text','public_metrics.retweet_count','public_metrics.reply_count','public_metrics.like_count','public_metrics.quote_count','public_metrics.impression_count,','author_id']]
+    new_tweets_df.columns = ['tweet_id','text','retweet_count','reply_count','like_count','quote_count','impression_count', 'author_id']
+
+    # Combine
+    combined = pd.concat([tweet_stats_df,new_tweets_df])
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/home/jay_orten/airflow-cs280/auth/bucket_auth.json"
 
     client = storage.Client()
     bucket = client.get_bucket("j-o-apache-airflow-cs280")
     bucket.blob("data/user_data.csv").upload_from_string(user_requests_df.to_csv(index=False), "text/csv")
-    bucket.blob("data/tweet_data.csv").upload_from_string(tweet_requests_df.to_csv(index=False), "text/csv")
+    bucket.blob("data/tweet_data.csv").upload_from_string(combined.to_csv(index=False), "text/csv")
 
     return
 
