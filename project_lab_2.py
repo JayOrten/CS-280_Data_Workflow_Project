@@ -122,16 +122,17 @@ def transform_data_task_func(ti : TaskInstance, **kwargs):
     for item in tweet_stats:
         tweet_stats_dta.append([item])
 
-    tweet_stats_df = pd.DataFrame(tweet_stats_dta, columns=['data'])
+    if tweet_stats_dta:
+        tweet_stats_df = pd.DataFrame(tweet_stats_dta, columns=['data'])
 
-    tweet_stats_df = pd.json_normalize(json.loads(tweet_stats_df.to_json(orient='records')))
+        tweet_stats_df = pd.json_normalize(json.loads(tweet_stats_df.to_json(orient='records')))
 
-    # Drop columns
-    tweet_stats_df.drop(['data.data.edit_history_tweet_ids'], axis=1)
+        # Drop columns
+        tweet_stats_df.drop(['data.data.edit_history_tweet_ids'], axis=1)
 
-    # Rename
-    tweet_stats_df = tweet_stats_df[['data.data.id','data.data.text','data.data.public_metrics.retweet_count','data.data.public_metrics.reply_count','data.data.public_metrics.like_count','data.data.public_metrics.quote_count','data.data.public_metrics.impression_count,','data.data.author_id']]
-    tweet_stats_df.columns = ['tweet_id','text','retweet_count','reply_count','like_count','quote_count','impression_count', 'author_id']
+        # Rename
+        tweet_stats_df = tweet_stats_df[['data.data.id','data.data.text','data.data.public_metrics.retweet_count','data.data.public_metrics.reply_count','data.data.public_metrics.like_count','data.data.public_metrics.quote_count','data.data.public_metrics.impression_count,','data.data.author_id']]
+        tweet_stats_df.columns = ['tweet_id','text','retweet_count','reply_count','like_count','quote_count','impression_count', 'author_id']
 
     
     # Transform new tweets data
@@ -153,7 +154,11 @@ def transform_data_task_func(ti : TaskInstance, **kwargs):
     new_tweets_df.columns = ['tweet_id','text','retweet_count','reply_count','like_count','quote_count','impression_count', 'author_id']
 
     # Combine
-    combined = pd.concat([tweet_stats_df,new_tweets_df])
+    if tweet_stats_dta:
+        combined = pd.concat([tweet_stats_df,new_tweets_df])
+    else:
+        combined = new_tweets_df
+
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/home/jay_orten/airflow-cs280/auth/bucket_auth.json"
 
     client = storage.Client()
@@ -188,8 +193,6 @@ def write_data_task_func(ti : TaskInstance, **kwargs):
                         date=datetime.now()
                     )
         users.append(user)
-    
-    
     
     session.add_all(users)
     session.commit()
