@@ -68,14 +68,14 @@ def call_api_task_func(ti : TaskInstance, **kwargs):
         api_url = f"https://api.twitter.com/2/users/{id}"
         request = requests.get(api_url, headers=auth_header, params=user_params).json()
         user_stats.append(request)
-        log.info(request)
+        log.info('user_stats request: ',request)
 
         # Retrieve the latest tweets for each user
         tweet_params = {'tweet.fields':'public_metrics,author_id,text'}
         api_url = f"https://api.twitter.com/2/users/{id}/tweets"
         request = requests.get(api_url, headers=auth_header, params=tweet_params).json()
         new_tweets.append(request)
-        log.info(request)
+        log.info('new_tweets request: ', request)
 
 
     # Retrieve every tweets updated stats
@@ -84,7 +84,7 @@ def call_api_task_func(ti : TaskInstance, **kwargs):
         api_url = f"https://api.twitter.com/2/tweets/{id}"
         request = requests.get(api_url, headers=auth_header, params=tweet_params).json()
         tweet_stats.append(request)
-        log.info(request)
+        log.info('tweet_stats request: ', request)
 
     ti.xcom_push("user_stats", user_stats)
     ti.xcom_push("tweet_stats", tweet_stats)
@@ -95,7 +95,7 @@ def call_api_task_func(ti : TaskInstance, **kwargs):
 def transform_data_task_func(ti : TaskInstance, **kwargs):
     user_stats = ti.xcom_pull(key="user_stats", task_ids="call_api_task")
     tweet_stats = ti.xcom_pull(key="tweet_stats", task_ids="call_api_task")
-    new_tweets = ti.xcom_pull(key="new_tweets", task_ids="new_tweets")
+    new_tweets = ti.xcom_pull(key="new_tweets", task_ids="call_api_task")
     print(user_stats)
     print(tweet_stats)
     print(new_tweets)
