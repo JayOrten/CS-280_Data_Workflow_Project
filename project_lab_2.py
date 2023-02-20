@@ -184,7 +184,7 @@ def write_data_task_func(ti : TaskInstance, **kwargs):
     users = []
     # Read the data from the csvs and upload to database
     for row in user_data:
-        user = User_Timeseries.create(
+        user = User_Timeseries(
                         user_id=row.user_id,
                         followers_count=row.followers_count,
                         following_count=row.following_count,
@@ -200,7 +200,7 @@ def write_data_task_func(ti : TaskInstance, **kwargs):
     tweets = []
     tweet_timeseries = []
     for row in tweet_data:
-        tweet = Tweet_Timeseries.create(
+        tweet = Tweet_Timeseries(
                         tweet_id=row.tweet_id,
                         retweet_count=row.retweet_count,
                         favorite_count=row.like_count,
