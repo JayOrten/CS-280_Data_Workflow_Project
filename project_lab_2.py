@@ -18,7 +18,7 @@ from models.tweet_model import Tweet
 from models.tweet_timeseries_model import Tweet_Timeseries
 from models.user_timeseries_model import User_Timeseries
 import Datetime
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, Date, Float
 
 def get_auth_header(my_bearer_token):
@@ -43,7 +43,7 @@ def call_api_task_func(ti : TaskInstance, **kwargs):
     all_tweets = ti.xcom_pull(key="tweet_ids", task_ids="load_data_task")
 
     # Pulls bearer token
-    # bearer_token = Variable.get("Bearer Token")
+    bearer_token = Variable.get("Bearer Token")
 
     # Create authentication header
     auth_header = get_auth_header(bearer_token)
