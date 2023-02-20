@@ -209,7 +209,7 @@ def write_data_task_func(ti : TaskInstance, **kwargs):
         tweet_timeseries.append(tweet)
     
         # If this tweet hasn't been seen before, add it to the tweets table
-        if not session.query(Tweet.query.filter(tweet_id=row.tweet_id).exists()).scalar():
+        if not session.query(session.query(Tweet).filter(tweet_id=row.tweet_id).exists()).scalar():
             tweet = Tweet.create(
                         tweet_id=row.tweet_id,
                         user_id=row.user_id,
