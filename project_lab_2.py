@@ -17,7 +17,7 @@ from models.users_model import User
 from models.tweet_model import Tweet
 from models.tweet_timeseries_model import Tweet_Timeseries
 from models.user_timeseries_model import User_Timeseries
-import Datetime
+from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, Date, Float
 
@@ -160,7 +160,7 @@ def write_data_task_func(ti : TaskInstance, **kwargs):
                         following_count=row.following_count,
                         tweet_count = row.tweet_count,
                         listed_count = row.listed_count,
-                        date=Datetime.now()
+                        date=datetime.now()
                     )
         users.append(user)
     
@@ -176,7 +176,7 @@ def write_data_task_func(ti : TaskInstance, **kwargs):
                         tweet_id=row.tweet_id,
                         retweet_count=row.retweet_count,
                         favorite_count=row.like_count,
-                        date=Datetime.now()
+                        date=datetime.now()
                 )
         tweet_timeseries.append(tweet)
     
@@ -186,7 +186,7 @@ def write_data_task_func(ti : TaskInstance, **kwargs):
                         tweet_id=row.tweet_id,
                         user_id=row.user_id,
                         text=row.text,
-                        created_at=Datetime.now()
+                        created_at=datetime.now()
                     )
             tweets.append(tweet)
     
