@@ -11,9 +11,5 @@ class Tweet_Timeseries(Base):
     favorite_count = Column(Integer, not_null=True)
     date = Column(Date, not_null=True)
     
-   def __repr__(self) -> str:
-        return f"Tweet_Timeseries(id={self.id}, 
-                tweet_id={self.tweet_id}, 
-                retweet_count={self.retweet_count}, 
-                favorite_count={self.favorite_count}, 
-                created_at={self.created_at})" 
+    def __repr__(self) -> str:
+            return f"Tweet_Timeseries(id={self.id}, tweet_id={self.tweet_id}, retweet_count={self.retweet_count}, favorite_count={self.favorite_count}, created_at={self.created_at})" 

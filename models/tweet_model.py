@@ -11,9 +11,5 @@ class Tweet(Base):
     text = Column(String, not_null=True)
     created_at = Column(Date, not_null=True)
     
-   def __repr__(self) -> str:
-        return f"Tweet(id={self.id}, 
-                tweet_id={self.tweet_id}, 
-                user_id={self.user_id}, 
-                text={self.text}, 
-                created_at={self.created_at})" 
+    def __repr__(self) -> str:
+            return f"Tweet(id={self.id}, tweet_id={self.tweet_id}, user_id={self.user_id}, text={self.text}, created_at={self.created_at})" 
