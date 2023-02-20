@@ -18,6 +18,8 @@ from models.tweet_model import Tweet
 from models.tweet_timeseries_model import Tweet_Timeseries
 from models.user_timeseries_model import User_Timeseries
 import Datetime
+from sqlalchemy.orm import declarative_base
+from sqlalchemy import Column, Integer, String, Date, Float
 
 def get_auth_header(my_bearer_token):
     return {"Authorization": f"Bearer {my_bearer_token}"}
