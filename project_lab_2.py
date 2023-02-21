@@ -132,7 +132,7 @@ def transform_data_task_func(ti : TaskInstance, **kwargs):
 
         # Rename
         tweet_stats_df = tweet_stats_df[['data.data.id','data.data.text','data.data.public_metrics.retweet_count','data.data.public_metrics.reply_count','data.data.public_metrics.like_count','data.data.public_metrics.quote_count','data.data.public_metrics.impression_count,','data.data.author_id']]
-        tweet_stats_df.columns = ['tweet_id','text','retweet_count','reply_count','like_count','quote_count','impression_count', 'author_id']
+        tweet_stats_df.columns = ['tweet_id','text','retweet_count','reply_count','like_count','quote_count','impression_count', 'user_id']
 
     
     # Transform new tweets data
@@ -151,7 +151,7 @@ def transform_data_task_func(ti : TaskInstance, **kwargs):
 
     # Rename
     new_tweets_df = new_tweets_df[['id','text','public_metrics.retweet_count','public_metrics.reply_count','public_metrics.like_count','public_metrics.quote_count','public_metrics.impression_count','author_id']]
-    new_tweets_df.columns = ['tweet_id','text','retweet_count','reply_count','like_count','quote_count','impression_count', 'author_id']
+    new_tweets_df.columns = ['tweet_id','text','retweet_count','reply_count','like_count','quote_count','impression_count', 'user_id']
 
     # Combine
     if tweet_stats_dta:
