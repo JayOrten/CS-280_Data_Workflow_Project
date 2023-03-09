@@ -184,7 +184,8 @@ def write_data_task_func(ti : TaskInstance, **kwargs):
     users = []
     # Read the data from the csvs and upload to database
     for _, row in user_data.iterrows():
-        if row.user_id == None:
+        if pd.isna(row.user_id):
+            print("NOT A NUMBER")
             continue
         user = User_Timeseries(
                         user_id=row.user_id,
@@ -202,7 +203,8 @@ def write_data_task_func(ti : TaskInstance, **kwargs):
     tweets = []
     tweet_timeseries = []
     for _, row in tweet_data.iterrows():
-        if row.tweet_id == None:
+        if pd.isna(row.tweet_id):
+            print("NOT A NUMBER")
             continue
         tweet = Tweet_Timeseries(
                         tweet_id=row.tweet_id,
