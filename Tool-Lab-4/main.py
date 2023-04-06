@@ -18,7 +18,7 @@ async def root():
 async def classify(file: UploadFile = File(...)):
     # Recieve image
     fileString = file.filename
-    fileContent = file.read() # Reads file information from request as a stream of byte
+    fileContent = await file.read() # Reads file information from request as a stream of byte
     image = Image.open(BytesIO(fileContent)) # Converts file to a python image from a stream of bytes.
     imageArray = np.asarray(image) #converts image to numpy array
     smallImage = cv2.resize(imageArray, dsize=(32, 32,3), interpolation=cv2.INTER_CUBIC) # Resizes the image
@@ -30,7 +30,7 @@ async def classify(file: UploadFile = File(...)):
     model = keras.models.load_model("trainedMode.h5")
 
     imageClassification = model.predict(batchedImage)
-    
+
     return {"classification":imageClassification}
 
 
