@@ -30,8 +30,9 @@ async def classify(file: UploadFile = File(...)):
     model = keras.models.load_model("trainedModel.h5")
 
     imageClassification = model.predict(batchedImage)
+    print('REACHED')
 
-    return {"classification":imageClassification}
+    return {"classification":f"{imageClassification}"}
 
 
 
