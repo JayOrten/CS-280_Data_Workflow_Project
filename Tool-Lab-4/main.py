@@ -27,7 +27,7 @@ async def classify(file: UploadFile = File(...)):
     # Classify image
 
     # Load model
-    model = keras.models.load_model("trainedMode.h5")
+    model = keras.models.load_model("trainedModel.h5")
 
     imageClassification = model.predict(batchedImage)
 
