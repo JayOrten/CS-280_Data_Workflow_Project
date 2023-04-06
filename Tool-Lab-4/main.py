@@ -29,8 +29,9 @@ async def classify(file: UploadFile = File(...)):
     # Load model
     model = keras.models.load_model("trainedModel.h5")
 
-    imageClassification = model.predict(batchedImage)
-    print('REACHED')
+    prediction = model.predict(batchedImage)
+    imageClassification = np.argmax(prediction, axis=1)
+    #print('REACHED')
 
     return {"classification":f"{imageClassification}"}
 
