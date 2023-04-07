@@ -21,13 +21,13 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler) # Add
 # Home route
 @app.get("/")
 @limiter.limit("15/minute")
-async def root():
+async def root(request: Request, response: Response):
 	return {"api_info": "Jay - Orten's CS280 Image Classifier"}
 
 # Classify image:
 @app.post("/classify/")
 @limiter.limit("5/minute")
-async def classify(file: UploadFile = File(...)):
+async def classify(request: Request, response: Response, file: UploadFile = File(...)):
     # Recieve image
     fileString = file.filename
     fileContent = await file.read() # Reads file information from request as a stream of byte
