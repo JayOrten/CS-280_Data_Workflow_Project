@@ -1,6 +1,6 @@
 #!/bin/bash --login
 
-#SBATCH --time=00:40:00
+#SBATCH --time=03:00:00
 #SBATCH --ntasks=1   # number of processor cores (i.e. tasks)
 #SBATCH --nodes=1   # number of nodes
 #SBATCH --gpus=1
