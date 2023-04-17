@@ -9,7 +9,7 @@ import itertools
 (x_train, y_train), (x_val, y_val) = keras.datasets.cifar100.load_data()
 
 # save the dataset to the current directory
-np.savez('/home/jo288/tool_lab_5/cifar100.npz', x_train=x_train, y_train=y_train, x_val=x_val, y_val=y_val)
+np.savez('./data/cifar100.npz', x_train=x_train, y_train=y_train, x_val=x_val, y_val=y_val)
 
 
 # define the range of hyperparameters to test

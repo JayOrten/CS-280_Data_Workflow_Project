@@ -5,7 +5,7 @@ from keras import layers
 import sys
 
 # get your data
-dataset = np.load('/home/jo288/tool_lab_5/cifar100.npz')
+dataset = np.load('./data/cifar100.npz')
 x_train = dataset['x_train']
 y_train = dataset['y_train']
 x_val = dataset['x_val']
