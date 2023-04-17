@@ -1,4 +1,4 @@
-#!/bin/bash --login  #login flag is super important to open conda on the compute node
+#!/bin/bash --login
 
 #SBATCH --time=00:40:00
 #SBATCH --ntasks=1   # number of processor cores (i.e. tasks)
