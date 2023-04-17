@@ -10,26 +10,26 @@ L1NF="2 4 8 16"
 
 FDROPOUT=".25 0.5 .75"
 
-sbatch ./second_script.sh 25 10 1e-1 2 .25
+#sbatch ./second_script.sh 25 10 1e-1 2 .25
 
-#or BS in $BATCH_SIZE ; do
+for BS in $BATCH_SIZE ; do
 
-#    for EP in $EPOCHS ; do
+    for EP in $EPOCHS ; do
     
-#        for LR in $LEARNING_RATE ; do
+        for LR in $LEARNING_RATE ; do
 
-#            for L1 in $L1NF ; do
+            for L1 in $L1NF ; do
 
-#                for DO in $FDROPOUT ; do
+                for DO in $FDROPOUT ; do
 
-#                    sbatch ./second_script.sh $BS $EP $LR $L1 $DO
+                    sbatch ./second_script.sh $BS $EP $LR $L1 $DO
 
-#                done
+                done
                 
-#            done
+            done
 
-#        done
+        done
     
-#    done
+    done
 
-#done
+done
